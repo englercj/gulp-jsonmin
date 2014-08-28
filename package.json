@@ -1,0 +1,28 @@
+{
+  "name": "gulp-jsonmin",
+  "version": "1.0.0",
+  "description": "Minifies json files my parsing and re-stringifying it.",
+  "author": "Chad Engler <chad@pantherdev.com>",
+  "homepage": "https://github.com/englercj/lttp",
+  "bugs": "https://github.com/englercj/lttp/issues",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/englercj/gulp-jsonmin.git"
+  },
+  "keywords": [
+    "gulpplugin",
+    "json",
+    "minify",
+    "min",
+    "jsonmin",
+    "gulp"
+  ],
+  "dependencies": {
+    "through2": "^0.6.1",
+    "chalk": "^0.5.1",
+    "gulp-util": "^3.0.0",
+    "pretty-bytes": "^1.0.1"
+  }
+}
