@@ -36,8 +36,7 @@ module.exports = function (options) {
 
             if (options.verbose) {
                 var percent = originalSize > 0 ? (saved / originalSize) * 100 : 0,
-                    savedMsg = savedMsg(saved, percent),
-                    msg = saved > 0 ? savedMsg : 'already minified';
+                    msg = saved > 0 ? savedMsg(saved, percent) : 'already minified';
 
                 gutil.log('gulp-jsonmin:', chalk.green('✔ ') + file.relative + chalk.gray(' (' + msg + ')'));
             }
