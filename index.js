@@ -52,7 +52,7 @@ module.exports = function (options) {
             msg = 'Minified ' + totalFiles + ' json ';
 
         msg += totalFiles === 1 ? 'file' : 'files';
-        msg += chalk.gray(' (' + savedMsg(saved, percent) + ')');
+        msg += chalk.gray(' (' + savedMsg(totalSavedBytes, percent) + ')');
 
         gutil.log('gulp-jsonmin:', msg);
 
