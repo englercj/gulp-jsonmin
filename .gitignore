@@ -15,7 +15,11 @@ npm-debug.log
 *~
 \#*#
 
+# JetBrains IDEs files
+.idea/
+
 # project ignores
 !.gitkeep
 *__temp
+dist/
 node_modules/
