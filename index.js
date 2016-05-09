@@ -47,13 +47,16 @@ module.exports = function (options) {
         this.push(file);
         cb();
     }, function (cb) {
-        var percent = totalBytes > 0 ? (totalSavedBytes / totalBytes) * 100 : 0,
-            msg = 'Minified ' + totalFiles + ' json ';
 
-        msg += totalFiles === 1 ? 'file' : 'files';
-        msg += chalk.gray(' (' + savedMsg(totalSavedBytes, percent) + ')');
+        if (options.verbose) {
+            var percent = totalBytes > 0 ? (totalSavedBytes / totalBytes) * 100 : 0,
+                msg = 'Minified ' + totalFiles + ' json ';
 
-        gutil.log('gulp-jsonmin:', msg);
+            msg += totalFiles === 1 ? 'file' : 'files';
+            msg += chalk.gray(' (' + savedMsg(totalSavedBytes, percent) + ')');
+
+            gutil.log('gulp-jsonmin:', msg);
+        }
 
         cb();
     });
