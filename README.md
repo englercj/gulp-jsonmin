@@ -1,6 +1,6 @@
 # gulp-jsonmin
 
-Minifies json files my parsing and re-stringifying it.
+Minifies json files by parsing and re-stringifying them.
 
 ## Usage
 
@@ -8,7 +8,7 @@ Minifies json files my parsing and re-stringifying it.
 var jsonmin = require('gulp-jsonmin');
 
 gulp.task('minify', function () {
-    gulp.src(['./src/**/*.json'])
+    gulp.src('./src/**/*.json')
         .pipe(jsonmin())
         .pipe(gulp.dest('./dist'));
 });
