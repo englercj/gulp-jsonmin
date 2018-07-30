@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "inlineSources": true,
+    "lib": [
+      "es2018"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "outDir": "dist",
+    "pretty": true,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "include": [
+    "lib"
+  ]
+}
