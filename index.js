@@ -51,7 +51,7 @@ module.exports = options => {
 
             callback(null, file);
         } catch (error) {
-            callback(new PluginError(PLUGIN_NAME, error));
+            callback(new PluginError(PLUGIN_NAME, error), file);
         }
     }, callback => {
         if (options.verbose) {
