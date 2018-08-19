@@ -59,6 +59,7 @@ module.exports = options => {
             const savedMessage = buildSavedMessage(totalSavedBytes, savedPercentage);
             log(`${PLUGIN_NAME}:`, `Minified ${totalFiles} json file(s) ${chalk.gray(`(${savedMessage})`)}`);
         }
+
         callback();
     });
 };
