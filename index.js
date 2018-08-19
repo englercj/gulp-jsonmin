@@ -46,7 +46,7 @@ module.exports = options => {
             if (options.verbose) {
                 const savedPercentage = fileSize ? savedBytes / fileSize * 100 : 0;
                 const savedMessage = savedBytes ? buildSavedMessage(savedBytes, savedPercentage) : 'already minified';
-                log(`${PLUGIN_NAME}:`, `${chalk.green('✔')} ${file.relative} (${chalk.gray(savedMessage)})`);
+                log(`${PLUGIN_NAME}:`, `${chalk.green('✔')} ${file.relative} ${chalk.gray(`(${savedMessage})`)}`);
             }
 
             callback(null, file);
@@ -57,7 +57,7 @@ module.exports = options => {
         if (options.verbose) {
             const savedPercentage = totalFilesSize ? totalSavedBytes / totalFilesSize * 100 : 0;
             const savedMessage = buildSavedMessage(totalSavedBytes, savedPercentage);
-            log(`${PLUGIN_NAME}:`, `Minified ${totalFiles} json file(s) (${chalk.gray(savedMessage)})`);
+            log(`${PLUGIN_NAME}:`, `Minified ${totalFiles} json file(s) ${chalk.gray(`(${savedMessage})`)}`);
         }
         callback();
     });
