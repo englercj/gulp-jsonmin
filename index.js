@@ -1,67 +1,65 @@
-var through = require('through2'),
-    gutil = require('gulp-util'),
-    prettyBytes = require('pretty-bytes'),
-    chalk = require('chalk');
+const chalk = require('chalk');
+const log = require('fancy-log');
+const PluginError = require('plugin-error');
+const prettyBytes = require('pretty-bytes');
+const trough = require('through2');
 
-module.exports = function (options) {
-    options = options || {};
-    options.verbose = options.verbose !== undefined ? options.verbose : (process.argv.indexOf('--verbose') !== -1);
+const buildSavedMessage = (savedBytes, savedPercentage) => {
+    return `saved ${prettyBytes(savedBytes)} - ${savedPercentage.toFixed(1)}%`;
+};
+const minifyJson = input => {
+    if (input instanceof Buffer) {
+        input = input.toString();
+    }
+    return JSON.stringify(JSON.parse(input));
+};
 
-    var totalBytes = 0,
-        totalSavedBytes = 0,
-        totalFiles = 0;
+const DEFAULT_OPTIONS = {
+    verbose: process.argv.includes('--verbose')
+};
+const PLUGIN_NAME = 'gulp-jsonmin';
 
-    return through.obj(function (file, encoding, cb) {
+module.exports = options => {
+    options = Object.assign({}, DEFAULT_OPTIONS, options);
+
+    let totalFiles = 0;
+    let totalFilesSize = 0;
+    let totalSavedBytes = 0;
+
+    return trough.obj((file, encoding, callback) => {
         if (file.isNull()) {
-            this.push(file);
-            return cb();
-        }
-
-        if (file.isStream()) {
-            this.emit('error', new gutil.PluginError('gulp-jsonmin', 'Streaming not supported'));
-            return cb();
+            return callback(null, file);
+        } else if (file.isStream()) {
+            return callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
         }
 
         try {
-            var originalSize = file.contents.length;
+            const fileSize = file.contents.length;
+            file.contents = Buffer.from(minifyJson(file.contents));
+            const minifiedFileSize = file.contents.length;
+            const savedBytes = fileSize - minifiedFileSize;
 
-            file.contents = new Buffer(JSON.stringify(JSON.parse(file.contents.toString())));
-
-            var optimizedSize = file.contents.length,
-                saved = originalSize - optimizedSize;
-
-            totalBytes += originalSize;
-            totalSavedBytes += saved;
-            totalFiles++;
+            totalFiles += 1;
+            totalFilesSize += fileSize;
+            totalSavedBytes += savedBytes;
 
             if (options.verbose) {
-                var percent = originalSize > 0 ? (saved / originalSize) * 100 : 0,
-                    msg = saved > 0 ? savedMsg(saved, percent) : 'already minified';
-
-                gutil.log('gulp-jsonmin:', chalk.green('✔ ') + file.relative + chalk.gray(' (' + msg + ')'));
+                const savedPercentage = fileSize ? savedBytes / fileSize * 100 : 0;
+                const savedMessage = savedBytes ? buildSavedMessage(savedBytes, savedPercentage) : 'already minified';
+                log(`${PLUGIN_NAME}:`, `${chalk.green('✔')} ${file.relative} ${chalk.gray(`(${savedMessage})`)}`);
             }
-        } catch (err) {
-            this.emit('error', new gutil.PluginError('gulp-jsonmin', err));
+
+            callback(null, file);
+        } catch (error) {
+            callback(new PluginError(PLUGIN_NAME, error), file);
         }
-
-        this.push(file);
-        cb();
-    }, function (cb) {
-
+    }, callback => {
         if (options.verbose) {
-            var percent = totalBytes > 0 ? (totalSavedBytes / totalBytes) * 100 : 0,
-                msg = 'Minified ' + totalFiles + ' json ';
-
-            msg += totalFiles === 1 ? 'file' : 'files';
-            msg += chalk.gray(' (' + savedMsg(totalSavedBytes, percent) + ')');
-
-            gutil.log('gulp-jsonmin:', msg);
+            const savedPercentage = totalFilesSize ? totalSavedBytes / totalFilesSize * 100 : 0;
+            const savedMessage = buildSavedMessage(totalSavedBytes, savedPercentage);
+            log(`${PLUGIN_NAME}:`, `Minified ${totalFiles} json file(s) ${chalk.gray(`(${savedMessage})`)}`);
         }
 
-        cb();
+        callback();
     });
 };
-
-function savedMsg(saved, percent) {
-    return 'saved ' + prettyBytes(saved) + ' - ' + percent.toFixed(1).replace(/\.0$/, '') + '%';
-}
